@@ -16,7 +16,7 @@ module Globalize
       def with_translations(*locales)
         locales = translated_locales if locales.empty?
         preload(:translations).joins(:translations).readonly(false).with_locales(locales).tap do |query|
-          query.distinct! unless locales.flatten.one?
+          query.select("DISTINCT ON (#{self.primary_key}) #{self.table_name}.*") unless locales.flatten.one?
         end
       end
 
